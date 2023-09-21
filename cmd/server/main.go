@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/souviks72/go-rest-api/internal/comment"
 	"github.com/souviks72/go-rest-api/internal/db"
 )
 
@@ -25,6 +26,15 @@ func Run() error {
 		fmt.Println("failed to migrate database")
 		return err
 	}
+
+	cmtService := comment.NewService(db)
+	fmt.Println(cmtService.PostComment(context.Background(), comment.Comment{
+		ID:     "some id",
+		Slug:   "manual-test",
+		Author: "Elliot",
+		Body:   "Hello World",
+	}))
+
 	return nil
 }
 
