@@ -6,6 +6,7 @@ import (
 
 	"github.com/souviks72/go-rest-api/internal/comment"
 	"github.com/souviks72/go-rest-api/internal/db"
+	transportHttp "github.com/souviks72/go-rest-api/internal/transport/http"
 )
 
 // Run - is going to be responsible for
@@ -28,12 +29,11 @@ func Run() error {
 	}
 
 	cmtService := comment.NewService(db)
-	fmt.Println(cmtService.PostComment(context.Background(), comment.Comment{
-		ID:     "some id",
-		Slug:   "manual-test",
-		Author: "Elliot",
-		Body:   "Hello World",
-	}))
+
+	httpHandler := transportHttp.NewHandler(cmtService)
+	if err := httpHandler.Serve(); err != nil {
+		return err
+	}
 
 	return nil
 }
